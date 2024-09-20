@@ -35,7 +35,7 @@ Va fi necesară repornirea Home Assistant indiferent de metoda aleasă.
 
 ### API Telegram
 
-Este necesar să aveți credențiale API valabile pentru a utiliza integrarea:
+Deoarece roboții de Telegram nu se pot abona la mesajele altor roboți, este necesar ca integrarea să se conecteze la rețeaua Telegram ca utilizator. Drept urmare, este necesar să obțineți un set de credențiale pentru a utiliza integrarea:
 1. Mergeți la [Telegram API](https://my.telegram.org/).
 2. Logați-vă în contul dvs.
 3. Creați o nouă aplicație pentru a obține `api_id` și `api_hash`.
