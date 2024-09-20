@@ -14,9 +14,10 @@ Aceasta este o integrare Home Assistant care permite recepționarea de alerte de
 ## Cum să instalați
 
 1. **Descărcare și copiere**
+
 Pentru a instala această integrare, urmați una din cele două metode de instalare:
 
-- Clonați acest repository sau descărcați fișierele necesare în dosarul custom_components al Home Assistant.
+- Clonați sau descărcați acest repository și copiați directorul `telegram_earthquake_alert` în dosarul custom_components al Home Assistant.
 - Folosind HACS, adăugați adresa acestui repository de GitHub în Custom Repositories și căutați apoi după Alerta Cutremur.
 
 Va fi necesară repornirea Home Assistant indiferent de metoda aleasă.
