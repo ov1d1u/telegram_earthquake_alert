@@ -40,6 +40,32 @@ Este necesar să aveți credențiale API valabile pentru a utiliza integrarea:
 2. Logați-vă în contul dvs.
 3. Creați o nouă aplicație pentru a obține `api_id` și `api_hash`.
 
+## Utilizare
+
+Integrarea va monitoriza conversațiile selectate după mesaje care conțin șirul de caractere "magnitudine" (nu contează majusculele). Odată primit un astfel de mesaj, va încerca să extragă valoarea magnitudinii și va trimite un eveniment `telegram_earthquake_alert` împreună cu magnitudinea acestuia. Structura evenimentului arată așa:
+
+```yaml
+event_type: telegram_earthquake_alert
+data:
+  magnitude: "2.1"
+```
+
+Acest eveniment poate fi interceptat folosind o automatizare în felul următor:
+
+```yaml
+alias: Cutremur detectat
+trigger:
+  - platform: event
+    event_type: telegram_earthquake_alert
+condition: []
+action:
+  - action: notify.mobile_apps
+    data:
+      message: "Cutremur detectat. Magnitudine: {{ trigger.event.data.magnitude }}"
+      title: "ATENȚIE: CUTREMUR"
+mode: single
+```
+
 ## Contribuire
 
 Contribuțiile sunt binevenite! Deschideți un `Pull Request` pentru a contribui cu cod sau un tichet în secțiunea `Issues` a repository-ului pentru a raporta o problemă.
