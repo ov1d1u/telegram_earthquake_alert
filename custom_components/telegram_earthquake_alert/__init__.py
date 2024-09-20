@@ -22,23 +22,23 @@ MAX_WORD_DISTANCE = 3
 PLATFORMS: list[Platform] = []
 
 def find_magnitude(text):
-        found_word = False
-        word_distance = 0
+    found_word = False
+    word_distance = 0
 
-        for word in text.split():
-            if 'magnitudine' in word.lower():
-                found_word = True
-                continue
+    for word in text.split():
+        if 'magnitudine' in word.lower():
+            found_word = True
+            continue
 
-            if found_word:
-                match = re.search(r"\d+[.,]\d+", word)
-                if match and word_distance < MAX_WORD_DISTANCE:
-                    magnitude = match.group()
-                    return magnitude
+        if found_word:
+            match = re.search(r"\d+[.,]\d+", word)
+            if match and word_distance < MAX_WORD_DISTANCE:
+                magnitude = match.group()
+                return magnitude
 
-                word_distance += 1
+            word_distance += 1
 
-        return None
+    return None
 
 async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
     api_id = entry.options.get(CONF_API_ID, None) or entry.data.get(CONF_API_ID, None)
