@@ -11,5 +11,6 @@
   "single_config_entry": true,
   "requirements": [
     "Telethon==1.36.0"
-  ]
+  ],
+  "version": "0.0.1"
 }
