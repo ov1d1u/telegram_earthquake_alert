@@ -1,0 +1,15 @@
+{
+  "domain": "telegram_earthquake_alert",
+  "name": "Alerta Cutremur",
+  "codeowners": [
+    "@ov1d1u"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/telegram_earthquake_alert",
+  "iot_class": "cloud_push",
+  "single_config_entry": true,
+  "requirements": [
+    "Telethon==1.36.0"
+  ]
+}

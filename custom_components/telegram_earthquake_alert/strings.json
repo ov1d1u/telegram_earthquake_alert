@@ -1,0 +1,43 @@
+{
+  "config": {
+    "error": {
+      "invalid_verification_code": "Invalid verification code",
+      "api_id_invalid": "Invalid API id and API hash combination"
+    },
+    "abort": {
+      "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
+    },
+    "step": {
+      "select_dialogs": {
+        "data": {
+          "dialogs": "Dialogs to monitor"
+        },
+        "description": "Select the conversations you want the integration to monitor for earthquake alerts.",
+        "title": "Conversations monitoring"
+      },
+      "user": {
+        "data": {
+          "api_hash": "API hash",
+          "api_id": "API id",
+          "phone_number": "Phone number (international format)"
+        },
+        "description": "To get API id and API hash, go to my.telegram.org.",
+        "title": "Configure Telegram API access"
+      },
+      "verification_code": {
+        "data": {
+          "verification_code": "Verification code"
+        },
+        "description": "Enter the verification code sent to your phone",
+        "title": "Enter verification code"
+      },
+      "reconfigure": {
+        "data": {
+          "dialogs": "Dialogs to monitor"
+        },
+        "description": "Select the conversations you want the integration to monitor for earthquake alerts.",
+        "title": "Conversations monitoring"
+      }
+    }
+  }
+}

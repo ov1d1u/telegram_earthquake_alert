@@ -1,0 +1,40 @@
+{
+    "config": {
+        "error": {
+            "invalid_verification_code": "Cod de verificare invalid",
+            "api_id_invalid": "Combinația API id și API hash este invalidă"
+        },
+        "step": {
+            "select_dialogs": {
+                "data": {
+                    "dialogs": "Conversații de monitorizat"
+                },
+                "description": "Selectați conversațiile pe care doriți să le monitorizați pentru alerte de tip cutremur.",
+                "title": "Monitorizare conversații"
+            },
+            "user": {
+                "data": {
+                    "api_hash": "API hash",
+                    "api_id": "API id",
+                    "phone_number": "Număr telefon (în format internațional)"
+                },
+                "description": "Pentru a obține API id și API hash, accesați my.telegram.org.",
+                "title": "Configurare acces API Telegram"
+            },
+            "verification_code": {
+                "data": {
+                    "verification_code": "Cod de verificare"
+                },
+                "description": "Introduceți codul de verificare pe care l-ați primit pe telefon",
+                "title": "Introducere cod de verificare"
+            },
+            "reconfigure": {
+                "data": {
+                    "dialogs": "Conversații de monitorizat"
+                },
+                "description": "Selectați conversațiile pe care doriți să le monitorizați pentru alerte de tip cutremur.",
+                "title": "Monitorizare conversații"
+            }
+        }
+    }
+}
