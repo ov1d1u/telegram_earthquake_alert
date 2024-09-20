@@ -66,6 +66,10 @@ action:
 mode: single
 ```
 
+**Notă**: alertele de cutremur pot veni de mai multe ori, repetat, într-un interval scurt de timp. Rămâne la datoria utilizatorului să filtreze mesajele repetate.
+
+Pentru a testa integrarea, puteți folosi un așa-numit Echo Bot din cei disponibili în rețeaua Telegram. Nu uitați să configurați integrarea pentru a monitoriza conversația cu bot-ul.
+
 ## Contribuire
 
 Contribuțiile sunt binevenite! Deschideți un `Pull Request` pentru a contribui cu cod sau un tichet în secțiunea `Issues` a repository-ului pentru a raporta o problemă.
