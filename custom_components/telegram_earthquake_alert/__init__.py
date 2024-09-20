@@ -32,8 +32,6 @@ def find_magnitude(text):
 
             if found_word:
                 match = re.search(r"\d+[.,]\d+", word)
-                if match:
-                    print(word_distance)
                 if match and word_distance < MAX_WORD_DISTANCE:
                     magnitude = match.group()
                     return magnitude
