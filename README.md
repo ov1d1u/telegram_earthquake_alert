@@ -1,9 +1,6 @@
 # Alertă Cutremur pentru Home Assistant
 
-Aceasta este o integrare Home Assistant care permite recepționarea de alerte de cutremur de la Institutul Național de Cercetare - Dezvoltare pentru Fizica Pământului (INCDFP) prin intermediul Telegram.
-
-## Avertisment
-**Această integrare nu este afiliată sau aprobată de Institutul Național de Cercetare - Dezvoltare pentru Fizica Pământului (INCDFP). Utilizați această integrare pe propriul risc și asigurați-vă că aveți surse alternative de alertare în caz de cutremur.**
+Aceasta este o integrare Home Assistant care permite recepționarea de alerte de cutremur emise de bot-ul @alertacutremur_bot pe Telegram.
 
 ## Caracteristici
 
@@ -65,6 +62,8 @@ action:
       title: "ATENȚIE: CUTREMUR"
 mode: single
 ```
+
+Pentru a primi alerte de cutremur, vă puteți abona la alertele seismice emise de bot-ul @alertacutremur_bot. [Instrucțiuni aici](https://www.infp.ro/index.php?i=tgr).
 
 **Notă**: alertele de cutremur pot veni de mai multe ori, repetat, într-un interval scurt de timp. Rămâne la datoria utilizatorului să filtreze mesajele repetate.
 
