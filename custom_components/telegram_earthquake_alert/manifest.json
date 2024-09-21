@@ -6,7 +6,8 @@
   ],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://www.home-assistant.io/integrations/telegram_earthquake_alert",
+  "documentation": "https://github.com/ov1d1u/telegram_earthquake_alert",
+  "issue_tracker": "https://github.com/ov1d1u/telegram_earthquake_alert/issues",
   "iot_class": "cloud_push",
   "single_config_entry": true,
   "requirements": [
