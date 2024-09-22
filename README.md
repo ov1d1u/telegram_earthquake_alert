@@ -39,7 +39,7 @@ Deoarece roboții de Telegram nu se pot abona la mesajele altor roboți, este ne
 
 ## Utilizare
 
-Începeți prin a vă abona, în aplicația Telegram, la mesajele bot-ului @alertacutremur_bot. Informații despre cum puteți face acest lucru veți găsi pe [pagina aceasta](https://www.infp.ro/index.php?i=tgr). Integrarea va monitoriza conversațiile selectate după mesaje care conțin șirul de caractere "magnitudine" (nu contează majusculele). Odată primit un astfel de mesaj, va încerca să extragă valoarea magnitudinii și va trimite un eveniment `telegram_earthquake_alert` împreună cu magnitudinea acestuia. Structura evenimentului arată așa:
+Începeți prin a vă abona, în aplicația Telegram, la mesajele bot-ului @alertacutremur_bot. Informații despre cum puteți face acest lucru veți găsi pe [pagina aceasta](https://www.infp.ro/index.php?i=tgr). După ce ați efectuat acest pas, configurați integrarea să urmărească conversațiile dorite. Integrarea va monitoriza conversațiile selectate după mesaje care conțin șirul de caractere "magnitudine" (nu contează majusculele). Odată primit un astfel de mesaj, va încerca să extragă valoarea magnitudinii și va trimite un eveniment `telegram_earthquake_alert` împreună cu magnitudinea acestuia. Structura evenimentului arată așa:
 
 ```yaml
 event_type: telegram_earthquake_alert
