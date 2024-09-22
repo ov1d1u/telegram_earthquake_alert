@@ -2,7 +2,8 @@
   "config": {
     "error": {
       "invalid_verification_code": "Invalid verification code",
-      "api_id_invalid": "Invalid API id and API hash combination"
+      "api_id_invalid": "Invalid API id and API hash combination",
+      "2fa_password_required": "Two-steps verification is enabled and a password is required"
     },
     "abort": {
       "reconfigure_successful": "[%key:common::config_flow::abort::reconfigure_successful%]"
@@ -30,6 +31,13 @@
         },
         "description": "Enter the verification code sent to your phone",
         "title": "Enter verification code"
+      },
+      "password": {
+        "data": {
+          "password": "Password"
+        },
+        "description": "Enter your two factor authentication password",
+        "title": "Password required"
       },
       "reconfigure": {
         "data": {

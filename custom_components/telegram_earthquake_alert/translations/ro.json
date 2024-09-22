@@ -2,7 +2,8 @@
     "config": {
         "error": {
             "invalid_verification_code": "Cod de verificare invalid",
-            "api_id_invalid": "Combinația API id și API hash este invalidă"
+            "api_id_invalid": "Combinația API id și API hash este invalidă",
+            "2fa_password_required": "Verificarea în doi pași este activată și o parolă este necesară"
         },
         "step": {
             "select_dialogs": {
@@ -27,6 +28,13 @@
                 },
                 "description": "Introduceți codul de verificare pe care l-ați primit pe telefon",
                 "title": "Introducere cod de verificare"
+            },
+            "password": {
+                "data": {
+                    "password": "Parolă"
+                },
+                "description": "Introduceți parola pentru autentificarea în doi pași",
+                "title": "Parolă necesară"
             },
             "reconfigure": {
                 "data": {

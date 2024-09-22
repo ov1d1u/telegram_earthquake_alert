@@ -8,7 +8,7 @@ from typing import Any
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.exceptions import HomeAssistantError
@@ -55,11 +55,15 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
         try:
             result = await self.telegram_client.sign_in(
                 self.phone_number,
-                password=self.password,
-                code=self.verification_code
+                code=self.verification_code,
+                password=self.password
             )
         except SendCodeUnavailableError:
             raise HomeAssistantError("invalid_verification_code")
+        except SessionPasswordNeededError:
+            return await self.async_step_password()
+        except HomeAssistantError as e:
+            raise HomeAssistantError(e)
 
         if isinstance(result, SentCode):
             return await self.async_step_verification_code()
@@ -125,6 +129,36 @@ class ConfigFlow(ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(CONF_VERIFICATION_CODE): str
+                }
+            ),
+            errors=errors
+        )
+
+    async def async_step_password(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle the password step."""
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            self.password = user_input[CONF_PASSWORD]
+
+            # Set verification_code to None as we're logging in
+            # with a password, now
+            self.verification_code = None
+
+            try:
+                return await self._sign_in_and_get_next_step()
+            except HomeAssistantError as e:
+                errors["base"] = str(e)
+            except Exception as e:
+                _LOGGER.exception(e)
+                errors["base"] = "unknown"
+
+        return self.async_show_form(
+            step_id="password",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_PASSWORD): str
                 }
             ),
             errors=errors
