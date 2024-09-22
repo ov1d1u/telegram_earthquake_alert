@@ -63,8 +63,6 @@ action:
 mode: single
 ```
 
-Pentru a primi alerte de cutremur, vă puteți abona la alertele seismice emise de bot-ul @alertacutremur_bot. [Instrucțiuni aici](https://www.infp.ro/index.php?i=tgr).
-
 **Notă**: alertele de cutremur pot veni de mai multe ori, repetat, într-un interval scurt de timp. Rămâne la datoria utilizatorului să filtreze mesajele repetate.
 
 Pentru a testa integrarea, puteți folosi un așa-numit Echo Bot din cei disponibili în rețeaua Telegram. Nu uitați să configurați integrarea pentru a monitoriza conversația cu bot-ul.
