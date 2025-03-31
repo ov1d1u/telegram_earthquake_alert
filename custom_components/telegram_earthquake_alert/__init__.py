@@ -40,7 +40,7 @@ def find_magnitude(text):
 
     return None
 
-async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     api_id = entry.options.get(CONF_API_ID, None) or entry.data.get(CONF_API_ID, None)
     api_hash = entry.options.get(CONF_API_HASH, None) or entry.data.get(CONF_API_HASH, None)
     phone_number = entry.options.get(CONF_PHONE_NUMBER, None) or entry.data.get(CONF_PHONE_NUMBER, None)
@@ -52,7 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: New_NameConfigEntry) -> 
             raw_text = event.message.raw_text
             magnitude = find_magnitude(raw_text)
             if magnitude:
-                hass.bus.async_fire(DOMAIN, {"magnitude": magnitude})
+                hass.bus.async_fire(DOMAIN, {"magnitude": magnitude, "original_text": raw_text})
 
     instance = TelegramClient(
         StringSession(session_string),
