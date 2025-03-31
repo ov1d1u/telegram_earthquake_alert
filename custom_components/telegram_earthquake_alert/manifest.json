@@ -11,7 +11,7 @@
   "iot_class": "cloud_push",
   "single_config_entry": true,
   "requirements": [
-    "Telethon==1.36.0"
+    "Telethon>=1.36.0"
   ],
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
