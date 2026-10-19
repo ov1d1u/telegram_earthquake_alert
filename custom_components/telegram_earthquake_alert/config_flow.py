@@ -15,8 +15,10 @@ from homeassistant.config_entries import (
     ConfigFlowResult,
 )
 from homeassistant.const import CONF_PASSWORD
-from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.selector import (
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
     TextSelector,
     TextSelectorConfig,
     TextSelectorType,
@@ -50,6 +52,11 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 _DEFAULT_DIALOG_TITLE_PREFIX = "INFP alerte cutremur"
+_PRIORITY_DIALOG_IDS = (
+    "-1001104224357",
+    "-1001050044158",
+    "-1001104475212",
+)
 _PASSWORD_SELECTOR = TextSelector(
     TextSelectorConfig(
         type=TextSelectorType.PASSWORD,
@@ -69,11 +76,31 @@ _PHONE_SELECTOR = TextSelector(
 def _dialogs_schema(
     dialogs: dict[str, str], default: list[str] | None = None
 ) -> vol.Schema:
-    """Build a dialog multi-select schema."""
+    """Build a dialog multi-select schema with priority chats first."""
+    priorities = {dialog_id: index for index, dialog_id in enumerate(_PRIORITY_DIALOG_IDS)}
+    # Use an array: JavaScript enumerates positive integer object keys first.
+    options = [
+        {"value": dialog_id, "label": title}
+        for dialog_id, title in sorted(
+            dialogs.items(),
+            key=lambda item: (
+                priorities.get(item[0], len(priorities)),
+                item[1].casefold(),
+            ),
+        )
+    ]
+    selector = SelectSelector(
+        SelectSelectorConfig(
+            options=options,
+            multiple=True,
+            mode=SelectSelectorMode.DROPDOWN,
+            sort=False,
+        )
+    )
     return vol.Schema(
         {
             vol.Required(CONF_DIALOGS, default=default or []): vol.All(
-                cv.multi_select(dialogs), vol.Length(min=1)
+                selector, vol.Length(min=1)
             )
         }
     )
@@ -287,9 +314,6 @@ class TelegramEarthquakeAlertConfigFlow(ConfigFlow, domain=DOMAIN):
             for dialog in dialogs
             if (title := getattr(dialog, "title", None)) and title.strip()
         }
-        self._dialogs = dict(
-            sorted(self._dialogs.items(), key=lambda item: item[1].casefold())
-        )
 
         if not self._dialogs:
             await self._async_disconnect()
@@ -380,9 +404,6 @@ class TelegramEarthquakeAlertConfigFlow(ConfigFlow, domain=DOMAIN):
             for dialog in dialogs
             if (title := getattr(dialog, "title", None)) and title.strip()
         }
-        dialogs_map = dict(
-            sorted(dialogs_map.items(), key=lambda item: item[1].casefold())
-        )
         if not dialogs_map:
             return self.async_abort(reason="no_dialogs")
 
