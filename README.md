@@ -2,6 +2,8 @@
 
 Aceasta este o integrare Home Assistant care permite recepționarea de alerte de cutremur emise de bot-ul @alertacutremur_bot pe Telegram.
 
+Este necesar Home Assistant 2024.11.0 sau o versiune mai nouă.
+
 ## Caracteristici
 
 - Monitorizează pentru mesaje tip notificări de cutremur transmise prin Telegram și trimite un eveniment (event) în Home Assistant.
@@ -27,7 +29,7 @@ Va fi necesară repornirea Home Assistant indiferent de metoda aleasă.
 
 În pașii de configurare:
 - Este necesar să furnizați datele de acces la API (`api_id` și `api_hash`) și numărul dvs. de telefon asociat contului Telegram.
-- După verificarea telefonului, veți introduce codul de verificare primit prin Telegram (în cazul autentificării cu doi factori).
+- După verificarea telefonului, veți introduce codul de verificare primit prin Telegram. Dacă autentificarea în doi pași este activă, vi se va solicita și parola.
 - Selectați conversațiile de la care doriți să primiți notificările de cutremur.
 
 ### API Telegram
@@ -45,6 +47,7 @@ Deoarece roboții de Telegram nu se pot abona la mesajele altor roboți, este ne
 event_type: telegram_earthquake_alert
 data:
   magnitude: "2.1"
+  original_text: "Mesajul original primit pe Telegram"
 ```
 
 Acest eveniment poate fi interceptat folosind o automatizare în felul următor:
@@ -56,14 +59,16 @@ trigger:
     event_type: telegram_earthquake_alert
 condition: []
 action:
-  - action: notify.mobile_apps
+  - action: notify.mobile_app_numele_dispozitivului
     data:
       message: "Cutremur detectat. Magnitudine: {{ trigger.event.data.magnitude }}"
       title: "ATENȚIE: CUTREMUR"
 mode: single
 ```
 
-**Notă**: alertele de cutremur pot veni de mai multe ori, repetat, într-un interval scurt de timp. Rămâne la datoria utilizatorului să filtreze mesajele repetate.
+Prima alertă este transmisă imediat. Alertele ulterioare din aceeași conversație sunt filtrate automat până când trec 30 de secunde fără o altă alertă validă, inclusiv în cazul actualizărilor de magnitudine. Fiecare conversație este filtrată separat.
+
+Magnitudinile cu virgulă sunt normalizate cu punct (de exemplu, `3,7` devine `"3.7"`). Câmpul `original_text` păstrează mesajul Telegram nemodificat.
 
 Pentru a testa integrarea, puteți folosi un așa-numit Echo Bot din cei disponibili în rețeaua Telegram. Nu uitați să configurați integrarea pentru a monitoriza conversația cu bot-ul.
 
@@ -73,4 +78,4 @@ Contribuțiile sunt binevenite! Deschideți un `Pull Request` pentru a contribui
 
 ## Licență
 
-Acest proiect este licențiat sub licența Apache 2.0. Vedeți fișierul `LICENSE` pentru mai multe detalii.
+Acest proiect este licențiat sub licența Apache 2.0. Vedeți fișierul `LICENSE` pentru mai multe detalii. Iconul folosit în cadrul proiectului provine de la [Earthquake icons created by Magnific - Flaticon](https://www.flaticon.com/free-icons/earthquake)

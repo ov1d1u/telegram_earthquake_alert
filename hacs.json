@@ -1,4 +1,4 @@
 {
-    "name": "Alerta cutremur",
-    "homeassistant": "2023.1.0"
+  "name": "Alerta cutremur",
+  "homeassistant": "2024.11.0"
 }

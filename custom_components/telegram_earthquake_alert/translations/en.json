@@ -1,12 +1,23 @@
 {
     "config": {
         "abort": {
-            "reconfigure_successful": "Re-configuration was successful"
+            "cannot_connect": "Failed to connect to Telegram",
+            "no_dialogs": "No Telegram conversations are available to monitor",
+            "reauth_account_mismatch": "The Telegram account does not match the previously configured account",
+            "reauth_successful": "Re-authentication was successful",
+            "reconfigure_successful": "Reconfiguration was successful",
+            "unknown": "Unexpected error",
+            "verification_code_expired": "The verification code expired. Restart setup to request a new code"
         },
         "error": {
-            "2fa_password_required": "Two-steps verification is enabled and a password is required",
             "api_id_invalid": "Invalid API id and API hash combination",
-            "invalid_verification_code": "Invalid verification code"
+            "cannot_connect": "Failed to connect to Telegram",
+            "invalid_password": "Invalid two-factor authentication password",
+            "invalid_verification_code": "Invalid verification code",
+            "phone_number_invalid": "Invalid phone number",
+            "rate_limited": "Too many attempts. Please wait before trying again",
+            "unknown": "Unexpected error",
+            "verification_code_expired": "The verification code expired. Restart the setup to request a new code"
         },
         "step": {
             "password": {
@@ -15,6 +26,15 @@
                 },
                 "description": "Enter your two factor authentication password",
                 "title": "Password required"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "api_hash": "API hash",
+                    "api_id": "API id",
+                    "phone_number": "Phone number (international format)"
+                },
+                "description": "Your Telegram session expired. Enter your Telegram API credentials to sign in again.",
+                "title": "Reconnect Telegram"
             },
             "reconfigure": {
                 "data": {

@@ -1,9 +1,23 @@
 {
     "config": {
+        "abort": {
+            "cannot_connect": "Conectarea la Telegram a eșuat",
+            "no_dialogs": "Nu există conversații Telegram disponibile pentru monitorizare",
+            "reauth_account_mismatch": "Contul Telegram nu corespunde contului configurat anterior",
+            "reauth_successful": "Reautentificarea a reușit",
+            "reconfigure_successful": "Reconfigurarea a reușit",
+            "unknown": "Eroare neașteptată",
+            "verification_code_expired": "Codul de verificare a expirat. Reporniți configurarea pentru a solicita un cod nou"
+        },
         "error": {
-            "invalid_verification_code": "Cod de verificare invalid",
             "api_id_invalid": "Combinația API id și API hash este invalidă",
-            "2fa_password_required": "Verificarea în doi pași este activată și o parolă este necesară"
+            "cannot_connect": "Conectarea la Telegram a eșuat",
+            "invalid_password": "Parola pentru autentificarea în doi pași este invalidă",
+            "invalid_verification_code": "Cod de verificare invalid",
+            "phone_number_invalid": "Număr de telefon invalid",
+            "rate_limited": "Prea multe încercări. Așteptați înainte de a încerca din nou",
+            "unknown": "Eroare neașteptată",
+            "verification_code_expired": "Codul de verificare a expirat. Reporniți configurarea pentru a solicita un cod nou"
         },
         "step": {
             "select_dialogs": {
@@ -35,6 +49,15 @@
                 },
                 "description": "Introduceți parola pentru autentificarea în doi pași",
                 "title": "Parolă necesară"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "api_hash": "API hash",
+                    "api_id": "API id",
+                    "phone_number": "Număr telefon (în format internațional)"
+                },
+                "description": "Sesiunea Telegram a expirat. Introduceți credențialele API Telegram pentru a vă autentifica din nou.",
+                "title": "Reconectare Telegram"
             },
             "reconfigure": {
                 "data": {

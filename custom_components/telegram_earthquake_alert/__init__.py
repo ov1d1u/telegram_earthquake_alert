@@ -1,84 +1,127 @@
+"""Telegram Earthquake Alert integration."""
+
 from __future__ import annotations
-import re
+
+from collections.abc import Awaitable, Callable
+from dataclasses import dataclass
+import logging
+from time import monotonic
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-
+from homeassistant.exceptions import (
+    ConfigEntryAuthFailed,
+    ConfigEntryError,
+    ConfigEntryNotReady,
+)
 from telethon import TelegramClient, events
+from telethon.errors import RPCError, UnauthorizedError
 from telethon.sessions import StringSession
-from telethon.tl.types import User
 
 from .const import (
-    DOMAIN,
+    ALERT_DEBOUNCE_SECONDS,
+    CONF_API_HASH,
     CONF_API_ID,
     CONF_DIALOGS,
-    CONF_API_HASH,
-    CONF_PHONE_NUMBER,
-    CONF_SESSION_STRING
+    CONF_SESSION_STRING,
+    DOMAIN,
 )
+from .parser import find_magnitude
 
-MAX_WORD_DISTANCE = 3
-PLATFORMS: list[Platform] = []
+_LOGGER = logging.getLogger(__name__)
 
-def find_magnitude(text):
-    found_word = False
-    word_distance = 0
+type MessageHandler = Callable[[Any], Awaitable[None]]
 
-    for word in text.split():
-        if 'magnitudine' in word.lower():
-            found_word = True
-            continue
 
-        if found_word:
-            match = re.search(r"\d+[.,]\d+", word)
-            if match and word_distance < MAX_WORD_DISTANCE:
-                magnitude = match.group()
-                return magnitude
+@dataclass(slots=True)
+class TelegramEarthquakeAlertRuntimeData:
+    """Runtime data for a config entry."""
 
-            word_distance += 1
+    client: TelegramClient
+    message_handler: MessageHandler
 
-    return None
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    api_id = entry.options.get(CONF_API_ID, None) or entry.data.get(CONF_API_ID, None)
-    api_hash = entry.options.get(CONF_API_HASH, None) or entry.data.get(CONF_API_HASH, None)
-    phone_number = entry.options.get(CONF_PHONE_NUMBER, None) or entry.data.get(CONF_PHONE_NUMBER, None)
-    dialogs = entry.options.get(CONF_DIALOGS, None) or entry.data.get(CONF_DIALOGS, None)
-    session_string = entry.options.get(CONF_SESSION_STRING, None) or entry.data.get(CONF_SESSION_STRING, None)
+type TelegramEarthquakeAlertConfigEntry = ConfigEntry[
+    TelegramEarthquakeAlertRuntimeData
+]
 
-    async def message_handler(event):
-        if str(event.message.chat_id) in dialogs:
-            raw_text = event.message.raw_text
-            magnitude = find_magnitude(raw_text)
-            if magnitude:
-                hass.bus.async_fire(DOMAIN, {"magnitude": magnitude, "original_text": raw_text})
 
-    instance = TelegramClient(
-        StringSession(session_string),
-        api_id,
-        api_hash
-    )
-    await instance.connect()
-    result = await instance.sign_in()
+async def _async_disconnect(client: TelegramClient) -> None:
+    """Disconnect a Telegram client without masking the original error."""
+    try:
+        await client.disconnect()
+    except Exception:  # Telethon may fail while tearing down a broken connection.
+        _LOGGER.debug("Error disconnecting from Telegram", exc_info=True)
 
-    if not isinstance(result, User):
-        raise Exception("Invalid configuration or user session expired")
 
-    instance.add_event_handler(
-        message_handler,
-        events.NewMessage(incoming=True)
-    )
+async def async_setup_entry(
+    hass: HomeAssistant, entry: TelegramEarthquakeAlertConfigEntry
+) -> bool:
+    """Set up Telegram Earthquake Alert from a config entry."""
+    try:
+        monitored_dialogs = frozenset(
+            str(dialog_id) for dialog_id in entry.data[CONF_DIALOGS]
+        )
+        client = TelegramClient(
+            StringSession(entry.data[CONF_SESSION_STRING]),
+            int(entry.data[CONF_API_ID]),
+            entry.data[CONF_API_HASH],
+        )
+    except (KeyError, TypeError, ValueError) as err:
+        raise ConfigEntryError("Invalid stored configuration") from err
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = instance
+    try:
+        await client.connect()
+        if not await client.is_user_authorized():
+            raise ConfigEntryAuthFailed("Telegram session is no longer authorized")
+    except ConfigEntryAuthFailed:
+        await _async_disconnect(client)
+        raise
+    except UnauthorizedError as err:
+        await _async_disconnect(client)
+        raise ConfigEntryAuthFailed("Telegram session is no longer authorized") from err
+    except (OSError, RPCError) as err:
+        await _async_disconnect(client)
+        raise ConfigEntryNotReady("Unable to connect to Telegram") from err
+    except Exception:
+        await _async_disconnect(client)
+        raise
 
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    last_alert_times: dict[str, float] = {}
+
+    async def message_handler(event: Any) -> None:
+        """Forward matching Telegram messages to the Home Assistant event bus."""
+        chat_id = str(event.chat_id)
+        if chat_id not in monitored_dialogs:
+            return
+
+        raw_text = event.raw_text or ""
+        if magnitude := find_magnitude(raw_text):
+            now = monotonic()
+            previous_alert_time = last_alert_times.get(chat_id)
+            last_alert_times[chat_id] = now
+            if (
+                previous_alert_time is not None
+                and now < previous_alert_time + ALERT_DEBOUNCE_SECONDS
+            ):
+                return
+
+            hass.bus.async_fire(
+                DOMAIN,
+                {"magnitude": magnitude, "original_text": raw_text},
+            )
+
+    client.add_event_handler(message_handler, events.NewMessage(incoming=True))
+    entry.runtime_data = TelegramEarthquakeAlertRuntimeData(client, message_handler)
     return True
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+
+async def async_unload_entry(
+    hass: HomeAssistant, entry: TelegramEarthquakeAlertConfigEntry
+) -> bool:
     """Unload a config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unload_ok:
-        instance = hass.data[DOMAIN][entry.entry_id]
-        await instance.disconnect()
-    return unload_ok
+    runtime_data = entry.runtime_data
+    runtime_data.client.remove_event_handler(runtime_data.message_handler)
+    await _async_disconnect(runtime_data.client)
+    return True

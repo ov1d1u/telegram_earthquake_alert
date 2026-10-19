@@ -7,11 +7,15 @@
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/ov1d1u/telegram_earthquake_alert",
+  "integration_type": "service",
   "issue_tracker": "https://github.com/ov1d1u/telegram_earthquake_alert/issues",
   "iot_class": "cloud_push",
+  "loggers": [
+    "telethon"
+  ],
   "single_config_entry": true,
   "requirements": [
-    "Telethon>=1.36.0"
+    "Telethon==1.44.0"
   ],
-  "version": "0.0.3"
+  "version": "0.1.0"
 }
